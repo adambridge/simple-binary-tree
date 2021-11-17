@@ -46,7 +46,6 @@ class BinaryTreeNode:
         else:
             return max(self._heightRecursor(node.left, acc + 1), self._heightRecursor(node.right, acc + 1))
 
-
     def _printableArray(self):
         '''
         >>> n(0)._printableArray()
@@ -61,7 +60,6 @@ class BinaryTreeNode:
         self._printArrayRecursor(node=self, height=height, arr=arr)
         return arr
 
-
     def _printArrayRecursor(self, node, height, arr, depth=0, col=0):
         arr[depth][col] = str(node.data)
         if depth < height - 1:
@@ -69,7 +67,6 @@ class BinaryTreeNode:
                 self._printArrayRecursor(node.left, height, arr, depth + 1, 2 * col)
             if node.right:
                 self._printArrayRecursor(node.right, height, arr, depth + 1, 2 * col + 1)
-
 
     def _emptyTreeArray(height):
         '''
