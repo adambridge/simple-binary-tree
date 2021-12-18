@@ -8,13 +8,10 @@ class Node:
     @classmethod
     def from_seq(cls, seq):
         """
-        >>> n.from_seq([0, 1, 2])
-         0
-        1 2
-        >>> n.from_seq([0, 1, 2, 3])
+        >>> n.from_seq([0, 1, 2, 3, 4])
            0
          1   2
-        3
+        3 4
         """
         if not seq:
             return None
@@ -27,20 +24,12 @@ class Node:
             if col == width:
                 col = 0
                 width = 2 * width
-                next_col.clear()
             if current is None:
                 current = Node(e)
-                next_row = current
                 root = current
-            elif col == 0:
-                current.left = Node(e)
-                next_row = current.left
             elif col % 2 == 0:
                 current.left = Node(e)
                 next_col.append(current.left)
-            elif col == width - 1:
-                current.right = Node(e)
-                current = next_row
             elif col % 2 == 1:
                 current.right = Node(e)
                 current = next_col.pop()
