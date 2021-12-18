@@ -1,6 +1,51 @@
-class BinaryTreeNode:
+import collections
+
+
+class Node:
     def __init__(self, data=None, left=None, right=None):
         self.data, self.left, self.right = data, left, right
+
+    @classmethod
+    def from_seq(cls, seq):
+        """
+        >>> n.from_seq([0, 1, 2])
+         0
+        1 2
+        >>> n.from_seq([0, 1, 2, 3])
+           0
+         1   2
+        3
+        """
+        if not seq:
+            return None
+
+        root, current, next_row = None, None, None
+        next_col = collections.deque()
+        width, col = 1, -1
+        for e in seq:
+            col = col + 1
+            if col == width:
+                col = 0
+                width = 2 * width
+                next_col.clear()
+            if current is None:
+                current = Node(e)
+                next_row = current
+                root = current
+            elif col == 0:
+                current.left = Node(e)
+                next_row = current.left
+            elif col % 2 == 0:
+                current.left = Node(e)
+                next_col.append(current.left)
+            elif col == width - 1:
+                current.right = Node(e)
+                current = next_row
+            elif col % 2 == 1:
+                current.right = Node(e)
+                current = next_col.pop()
+        return root
+
 
     def __repr__(self):
         """
@@ -32,7 +77,8 @@ class BinaryTreeNode:
         printableArray = self._printableArray()
         output = []
         for d in range(height):
-            output.append(' ' * left_pad + spacing.join(printableArray[d]))
+            line = ' ' * left_pad + spacing.join(printableArray[d])
+            output.append(line.rstrip())
             spacing = ' ' * left_pad
             left_pad = (left_pad - 1) // 2
         return '\n'.join(output)
@@ -56,7 +102,7 @@ class BinaryTreeNode:
         [['0'], ['1', '2'], [' ', ' ', '3', ' ']]
         '''
         height = self.height()
-        arr = BinaryTreeNode._emptyTreeArray(height)
+        arr = Node._emptyTreeArray(height)
         self._printArrayRecursor(node=self, height=height, arr=arr)
         return arr
 
@@ -70,7 +116,7 @@ class BinaryTreeNode:
 
     def _emptyTreeArray(height):
         '''
-        >>> BinaryTreeNode._emptyTreeArray(2)
+        >>> Node._emptyTreeArray(2)
         [[' '], [' ', ' ']]
         '''
         arr = [[] for _ in range(height)]
@@ -83,5 +129,5 @@ class BinaryTreeNode:
 if __name__ == '__main__':
     import doctest
 
-    n = BinaryTreeNode
+    n = Node
     doctest.testmod()
