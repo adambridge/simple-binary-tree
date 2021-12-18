@@ -1,4 +1,5 @@
 import collections
+import copy
 
 
 class Node:
@@ -8,31 +9,36 @@ class Node:
     @classmethod
     def from_seq(cls, seq):
         """
-        >>> n.from_seq([0, 1, 2, 3, 4])
+        >>> n.from_seq([0, 1, 2, 3, 4, 5])
            0
          1   2
-        3 4
+        3 4 5
         """
         if not seq:
             return None
 
-        root, current, next_row = None, None, None
-        next_col = collections.deque()
+        root, current= None, None
+        prev_level = collections.deque()
+        lowest_level = collections.deque()
         width, col = 1, -1
         for e in seq:
             col = col + 1
             if col == width:
                 col = 0
                 width = 2 * width
+                prev_level = copy.copy(lowest_level)
+                lowest_level = collections.deque()
             if current is None:
                 current = Node(e)
+                lowest_level.append(current)
                 root = current
             elif col % 2 == 0:
+                current = prev_level.popleft()
                 current.left = Node(e)
-                next_col.append(current.left)
+                lowest_level.append(current.left)
             elif col % 2 == 1:
                 current.right = Node(e)
-                current = next_col.pop()
+                lowest_level.append(current.right)
         return root
 
 
